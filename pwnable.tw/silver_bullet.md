@@ -26,6 +26,8 @@ This logic flaw **allows a buffer overflow**:
 ### 🏴 **Exploitation Plan**
 1. **Leak a libc address**  
    - Overwrite the return address to leak an address from the **libc**.
+   - Redirect execution to the beat function, which prints data from memory.
+   - Provide an address from a writable memory region (since in beat function param2 will get updated) as a param to beat function where a libc address exists (e.g., stdin stream).
 2. **Calculate `system` address**  
    - Using the leaked libc address, compute the base address and derive `system()`.
 3. **Overwrite return address with `system()`**  
