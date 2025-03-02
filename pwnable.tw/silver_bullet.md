@@ -1,8 +1,8 @@
 # 📌 silver_bullet - pwnable.tw
 
 ## 🔹 Vulnerability Analysis
-### 📌 **Vulnerable Function: `strncat`**
-The vulnerability resides in the **`strncat` function**, which is used for concatenating user-controlled input when "powering up" the bullet.
+### 📌 **Vulnerable Function: `power_up`**
+The vulnerability resides in the **`power_up` function**.
 
 ---
 
