@@ -66,7 +66,7 @@ The vulnerability exists in the function **`FUN_080487d4`**, which suffers from 
     +-------------------------------+
   ```
 - This allows us to **reclaim a previously freed note’s chunk** from the fastbin.  
-- Overwrite the **function pointer** (used for printing notes) with **`system()`**, leading to **EIP control** and **shell execution**.  
+- Overwrite the **function pointer** (used for printing notes) with **`system()`**, leading to **EIP control**.  
 - UAF for the previous note to print its content which will result in calling system.
 ---
 
