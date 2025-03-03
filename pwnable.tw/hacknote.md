@@ -27,7 +27,7 @@ The vulnerability exists in the function **`FUN_080487d4`**, which suffers from 
 - Allocate a new chunk smaller than 200 bytes to write the first 4 bytes which are zeroed to leaking the bk pointer (the next 4 bytes).
 
 ### 2️⃣ **Hijacking the Function Pointer**  
-- Allocate two chunks of random sizes (each greater than 16 bytes) to ensure they don’t end up in the same fastbin bucket (which holds chunks up to 16 bytes). The additional 8 bytes allocated alongside each chunk will help us later retrieve and overwrite the function pointer used for printing the note.
+- Allocate two chunks of random sizes (each greater than 16 bytes) to ensure they don’t end up in the same fastbin bucket as the chunks extra 8 bytes (which holds chunks up to 16 bytes). The additional 8 bytes allocated alongside each chunk will help us later retrieve and overwrite the function pointer used for printing the note.
   ```
     +-------------------------------+
     |      chunk1 extra 8 bytes      |
