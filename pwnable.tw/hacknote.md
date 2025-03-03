@@ -28,39 +28,39 @@ The vulnerability exists in the function **`FUN_080487d4`**, which suffers from 
 
 ### 2️⃣ **Hijacking the Function Pointer**  
 - Allocate two chunks of random sizes (each greater than 16 bytes) to ensure they don’t end up in the same fastbin bucket (which holds chunks up to 16 bytes). The additional 8 bytes allocated alongside each chunk will help us later retrieve and overwrite the function pointer used for printing the note.
-    +-------------------------------+
-    |      chunk1 extra 8 bytes      |
-    +-------------------------------+
-    |  fun ptr  |  chunk1 ptr        |
-    +-------------------------------+  <- Chunk 1 metadata
-    |        40 bytes               |
-    +-------------------------------+
-    |      chunk2 extra 8 bytes      |
-    +-------------------------------+
-    |  fun ptr  |  chunk2 ptr        |
-    +-------------------------------+  <- Chunk 2 metadata
-    |        40 bytes               |
-    +-------------------------------+
-    |            TOP                 |  <- Top chunk (wilderness)
-    |            ...                 |
-    +-------------------------------+
+    +-------------------------------+<br>
+    |      chunk1 extra 8 bytes      |<br>
+    +-------------------------------+<br>
+    |  fun ptr  |  chunk1 ptr        |<br>
+    +-------------------------------+  <- Chunk 1 metadata<br>
+    |        40 bytes               |<br>
+    +-------------------------------+<br>
+    |      chunk2 extra 8 bytes      |<br>
+    +-------------------------------+<br>
+    |  fun ptr  |  chunk2 ptr        |<br>
+    +-------------------------------+  <- Chunk 2 metadata<br>
+    |        40 bytes               |<br>
+    +-------------------------------+<br>
+    |            TOP                 |  <- Top chunk (wilderness)<br>
+    |            ...                 |<br>
+    +-------------------------------+<br>
 - Free them, and then allocate a new **8-byte chunk**.
-      +-------------------------------+
-    |    Chunk 3 extra 8 bytes      |
-    +-------------------------------+
-    |  fun ptr  |  chunk1 ptr        |
-    +-------------------------------+  
-    |            FREE                |
-    +-------------------------------+
-    |       Chunk 3 (8 bytes)        |
-    +-------------------------------+
-    |  system  |        sh           |
-    +-------------------------------+  
-    |            FREE                |
-    +-------------------------------+
-    |            TOP                 |  <- Top chunk (wilderness)
-    |            ...                 |
-    +-------------------------------+
+      +-------------------------------+<br>
+    |    Chunk 3 extra 8 bytes      |<br>
+    +-------------------------------+<br>
+    |  fun ptr  |  chunk1 ptr        |<br>
+    +-------------------------------+  <br>
+    |            FREE                |<br>
+    +-------------------------------+<br>
+    |       Chunk 3 (8 bytes)        |<br>
+    +-------------------------------+<br>
+    |  system  |        sh           |<br>
+    +-------------------------------+  <br>
+    |            FREE                |<br>
+    +-------------------------------+<br>
+    |            TOP                 |  <- Top chunk (wilderness)<br>
+    |            ...                 |<br>
+    +-------------------------------+<br>
 - This allows us to **reclaim a previously freed note’s chunk** from the fastbin.  
 - Overwrite the **function pointer** (used for printing notes) with **`system()`**, leading to **EIP control** and **shell execution**.  
 - UAF for the previous note to print its content which will result in calling system.
