@@ -1,7 +1,7 @@
 # 📌 **applestore - pwnable.tw**  
 
 ## 🔹 **Vulnerability Analysis**  
-
+Check Security Protections
 ``` bash
     Arch:       i386-32-little
     RELRO:      Partial RELRO
