@@ -60,7 +60,7 @@ This inconsistency creates an opportunity for exploitation.
 
 ## Step 3: Leak a Stack Address
 1. Use the same method as above, but this time leverage the `cart` function.
-   - The previous method leaks the address pointed to by `environ`, which has a **constant offset** to the stack.
+   - The previous method leaks the address pointed to by `environ`, which doesn't have a constant offset to the stack for some reason.
    - This allows us to compute the **saved EBP pointer** in the `delete` function.
 
 ## Step 4: Overwrite `atoi` with `system`
