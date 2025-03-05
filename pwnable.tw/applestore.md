@@ -70,3 +70,29 @@ This inconsistency creates an opportunity for exploitation.
    - After overwriting `atoi`, any input passed to it will be interpreted as a command to `system`.
 
 ---
+
+We can use the following Python program to determine the list of items required to trigger the checkout vulnerability. The program recursively searches for a combination of items whose total price equals the target value (in this case, 7174).
+``` python
+In [21]: def f(index, items_prices , target_number, used) :
+    ...:     if target_number == 0 :
+    ...:         return True
+    ...:     if index >= len(items_prices) :
+    ...:         return False
+    ...:     flag = 0
+    ...:     if target_number >= items_prices[index] :
+    ...:         used.append(items_prices[index])
+    ...:         flag = f(index, l , target_number - items_prices[index], used)
+    ...:         if not flag :
+    ...:             used.pop()
+    ...:     if not flag :
+    ...:         return f(index+1, items_prices, target_number, used)
+    ...:     return flag
+```
+    Args:
+        index (int): Current index in the items_prices list.
+        items_prices (list): List of available item prices.
+        target_number (int): The target total price. (7174)
+        used (list): List to store the selected items.
+
+    Returns:
+        bool: True if a valid combination is found, otherwise False.
