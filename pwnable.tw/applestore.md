@@ -52,8 +52,8 @@ This inconsistency creates an opportunity for exploitation.
 
 ## Step 2: Leak a Libc Address
 1. Send the input `"0x804b033"` to the `handler` function's input buffer.
-   - The `atoi` function will convert `0x33` (stopping at the first non-numeric character) to the integer `51`.
-   - The value `51` corresponds to the **delete item** function (third choice in the menu).
+   - The `atoi` function will convert `0x33` (stopping at the first non-numeric character) to the integer `3`.
+   - The value `3` corresponds to the **delete item** function (third choice in the menu).
 2. When the item is deleted, the program prints the `name` of the deleted item.
    - In this case, the `name` corresponds to the address `0x804b033`, which points to an entry in the **GOT (Global Offset Table)**.
    - This leaks the address of the `__libc_start_main` function, allowing us to calculate the base address of `libc`.
