@@ -64,8 +64,8 @@ This inconsistency creates an opportunity for exploitation.
    - This allows us to compute the **saved EBP pointer** in the `delete` function.
 
 ## Step 4: Overwrite `atoi` with `system`
-1. Compute the address of the **saved EBP** in the `delete` function.
-2. Overwrite the `atoi` GOT entry with the address of `system`.
+1. Compute the offset of the **saved EBP** in the `delete` function from the leaked stack addr.
+2. Overwrite the `atoi` GOT entry with the address of `system` since the relro check is `Partial RELRO`.
    - This is the easiest way to gain control, as the program uses `atoi` to convert user input into integers for menu choices.
    - After overwriting `atoi`, any input passed to it will be interpreted as a command to `system`.
 
