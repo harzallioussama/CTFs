@@ -60,7 +60,8 @@ This inconsistency creates an opportunity for exploitation.
 
 ## Step 3: Leak a Stack Address
 1. Use the same method as above, but this time leverage the `cart` function.
-   - The previous method leaks the address pointed to by `environ`, which doesn't have a constant offset to the stack for some reason.
+   - The previous method won't work because it leaks the address pointed to by `environ`, which doesn't have a constant offset to the stack for some reason.
+   - We will need to leak to address of `environ` that's why we'll ues the cart function by printing all the cart items and by injecting the environ variable in libc by the vuln buffer by send `y\x00` + the environ addr in libc.
    - This allows us to compute the **saved EBP pointer** in the `delete` function.
 
 ## Step 4: Overwrite `atoi` with `system`
